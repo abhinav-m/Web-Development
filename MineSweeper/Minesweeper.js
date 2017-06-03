@@ -138,6 +138,9 @@ function revealAdjacent(x,y,isVisited)
 	var checkArr = [];
 	checkArr.push(parseInt(x));
 	checkArr.push(parseInt(y));
+	if(board[x][y]==0)
+	$('#'+x+y).css("font-size","inherit");
+
 	isVisited.push(checkArr);
 	var adjacentElems = {
  	t:[-1,0],
@@ -156,19 +159,24 @@ function revealAdjacent(x,y,isVisited)
  	x = parseInt(x);
  	y = parseInt(y);
  	var arr = [];
- 	
+ 	var marked = false;
  	var adjacentRow = x+adjacentElems[index][0];
 	var adjacentCol = y+adjacentElems[index][1];
     arr.push(adjacentRow);
     arr.push(adjacentCol);
- if(isVisited.indexOf(arr)==-1)  
+
+    for(var i = 0;i<isVisited.length;i++)
+	if(isVisited[i][0]==arr[0]&&isVisited[i][1]==arr[1])
+	   marked = true;
+    
+ if(!marked)  
  {
-if(adjacentRow>=0&&adjacentRow<=board.length&&adjacentCol>=0&&adjacentCol<=board[0].length)
+if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0].length)
 {
 
 	if(board[adjacentRow][adjacentCol]==0)
 	{
-		$('#'+x+y).css("font-size","inherit");
+		$('#'+adjacentRow+adjacentCol).css("font-size","inherit");
 		revealAdjacent(adjacentRow,adjacentCol,isVisited);
 	}
 	else
