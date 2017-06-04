@@ -111,7 +111,7 @@ function renderBoard(board)
  for(j=0;j<board[i].length;j++)
  {
  var buttonId = ''+i+''+j;
- $("#mineBoard").append('<td><button id='+buttonId+'>'+board[i][j]+'</button></td>');
+ $("#mineBoard").append('<td><button class="noselect" id='+buttonId+'>'+board[i][j]+'</button></td>');
  $('#'+buttonId).click(buttonClicked);
  
 
@@ -136,7 +136,7 @@ function buttonClicked()
 	    $('#'+index[0]+index[1]).css("color","blue");
 		if(board[index[0]][index[1]]>2)
 	    $('#'+index[0]+index[1]).css("color","red");
-	    $('#'+index[0]+index[1]).css("opacity","0.6");
+	    $('#'+index[0]+index[1]).css("opacity","0.4");
 	    $('#'+index[0]+index[1]).attr("disabled","disabled");
     }
     else
@@ -155,7 +155,7 @@ function revealAdjacent(x,y,isVisited)
 	if(board[x][y]==0)
 	{
     $('#'+x+y).attr("disabled","disabled");
-	$('#'+x+y).css("opacity","0.6");
+	$('#'+x+y).css("opacity","0.4");
      }
 
 	isVisited.push(checkArr);
@@ -196,7 +196,7 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 		//$('#'+adjacentRow+adjacentCol).css("font-size","inherit");
 		//$('#'+adjacentRow+adjacentCol).focus();
 	    $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
-	    $('#'+adjacentRow+adjacentCol).css("opacity","0.6");
+	    $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
 		revealAdjacent(adjacentRow,adjacentCol,isVisited);
 	}
 	else
@@ -208,7 +208,7 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 		if(board[adjacentRow][adjacentCol]>2)
 	    $('#'+adjacentRow+adjacentCol).css("color","red");
 
-	  $('#'+adjacentRow+adjacentCol).css("opacity","0.6");
+	  $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
 	   $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
 	 	//$('#'+adjacentRow+adjacentCol).focus();
 

@@ -1,4 +1,6 @@
-
+body{
+	margin-top:5%;
+}
 
 button {
 	margin:0;
@@ -38,3 +40,25 @@ table{
 	justify-content:center;
 }
 
+.fa-heart{
+	color:red;
+}
+
+p{
+	font-family: 'Rajdhani', sans-serif;
+	font-size:1.2em;
+}
+
+a:link{
+	text-decoration:none;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
