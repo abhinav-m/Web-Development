@@ -129,7 +129,21 @@ function buttonClicked()
 	revealAdjacent(index[0],index[1],[]);
 	else
 	if(board[index[0]][index[1]]>0)
-    $('#'+this.id).css("font-size","inherit");
+	{
+        if(board[index[0]][index[1]]==1)
+	    $('#'+index[0]+index[1]).css("color","black");
+		if(board[index[0]][index[1]]==2)
+	    $('#'+index[0]+index[1]).css("color","blue");
+		if(board[index[0]][index[1]]>2)
+	    $('#'+index[0]+index[1]).css("color","red");
+	    $('#'+index[0]+index[1]).css("opacity","0.6");
+	    $('#'+index[0]+index[1]).attr("disabled","disabled");
+    }
+    else
+     $('#'+index[0]+index[1]).css("background-color","red");
+	   
+    
+    
 }
 
 
@@ -139,7 +153,10 @@ function revealAdjacent(x,y,isVisited)
 	checkArr.push(parseInt(x));
 	checkArr.push(parseInt(y));
 	if(board[x][y]==0)
-	$('#'+x+y).css("font-size","inherit");
+	{
+    $('#'+x+y).attr("disabled","disabled");
+	$('#'+x+y).css("opacity","0.6");
+     }
 
 	isVisited.push(checkArr);
 	var adjacentElems = {
@@ -176,13 +193,25 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 
 	if(board[adjacentRow][adjacentCol]==0)
 	{
-		$('#'+adjacentRow+adjacentCol).css("font-size","inherit");
+		//$('#'+adjacentRow+adjacentCol).css("font-size","inherit");
+		//$('#'+adjacentRow+adjacentCol).focus();
+	    $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
+	    $('#'+adjacentRow+adjacentCol).css("opacity","0.6");
 		revealAdjacent(adjacentRow,adjacentCol,isVisited);
 	}
 	else
 	{
-	 	if(board[adjacentRow][adjacentCol]>0)
-	    $('#'+adjacentRow+adjacentCol).css("font-size","inherit");
+	 	if(board[adjacentRow][adjacentCol]==1)
+	    $('#'+adjacentRow+adjacentCol).css("color","black");
+		if(board[adjacentRow][adjacentCol]==2)
+	    $('#'+adjacentRow+adjacentCol).css("color","blue");
+		if(board[adjacentRow][adjacentCol]>2)
+	    $('#'+adjacentRow+adjacentCol).css("color","red");
+
+	  $('#'+adjacentRow+adjacentCol).css("opacity","0.6");
+	   $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
+	 	//$('#'+adjacentRow+adjacentCol).focus();
+
     }
 	
 }
