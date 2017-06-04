@@ -3,9 +3,8 @@ $(document).ready(function(){
 var  board = makeBoard(8,8,10);
 renderBoard(board);
 
-function getBoard(){
-	return board;
-}
+$("#startButton").click(startGame);
+$("#content").hide();
 	
 });
 
@@ -221,6 +220,32 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 
 }
 }
+
+
+function startGame()
+{
+	$("#content").show();
+	startTimer(10);
+}
+
+function startTimer(maxMinutes)
+{
+  //ten minutes interval initially
+  var intervalInMinutes = 60 * maxMinutes;
+  var timer = intervalInMinutes,minutes,seconds;
+ setInterval(function(){
+  minutes = parseInt(timer / 60, 10);
+  seconds = parseInt(timer % 60, 10);
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+  $("#timer").html(minutes+":"+seconds);
+   if (--timer < 0) {
+            timer = intervalInMinutes;
+        }
+   }, 1000);
+
+}
+
 
 
 
