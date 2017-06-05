@@ -1,17 +1,36 @@
 $(document).ready(function(){
 
-var  board = makeBoard(8,8,10);
-renderBoard(board);
+ 
+ var timerFunc;
+ var  board;
+ var mineArray;
+ var unOpenedCells;
+ var totalCells;
+ var openedMatrix;
+ initialiseGame();
 
-$("#startButton").click(startGame);
-$("#content").hide();
 	
 });
+
+function initialiseGame()
+{
+$("#startButton").empty();
+$("#timer").empty();
+timerFunc = null;
+$("table").empty()
+board = makeBoard(8,8,10);
+renderBoard(board);
+$("#content").hide();
+ $("#startButton").html("Click to start!");
+ $("#startButton").click(startGame);
+
+}
+
 
 function makeBoard(rows,cols,mines)
 {
 var i,j;
-
+ totalCells = rows*cols;
  var adjacentElems = {
  	t:[-1,0],
  	tr:[-1,1],
@@ -43,10 +62,10 @@ Array.matrix = function(numRows,numCols,initial)
 
 //Making empty board of size 8x8 here.
 var board = Array.matrix(8,8,0);
-debugger;
+openedMatrix = Array.matrix(8,8,0);
 //Adding mines and filling board.
 
-var mineArray = [];
+   mineArray = [];
 var rowCol;
 var randRow, randCol;
 var isMarked;
@@ -112,6 +131,18 @@ function renderBoard(board)
  var buttonId = ''+i+''+j;
  $("#mineBoard").append('<td><button class="noselect" id='+buttonId+'>'+board[i][j]+'</button></td>');
  $('#'+buttonId).click(buttonClicked);
+ var button = document.getElementById(buttonId);
+ button.addEventListener('contextmenu',function(ev){
+ 	debugger;
+ 	ev.preventDefault();
+ 	var buttonId = this.id;
+ 	 var color = $("#"+buttonId).css("background-color");
+ 	 if(color=="rgb(237, 237, 237)")
+ 	 	$("#"+buttonId).css("background-color","red");
+ 	 else
+ 	 	 $("#"+buttonId).css("background-color","#ededed");
+ 	 	return false;
+ },false);
  
 
  }
@@ -135,15 +166,29 @@ function buttonClicked()
 	    $('#'+index[0]+index[1]).css("color","blue");
 		if(board[index[0]][index[1]]>2)
 	    $('#'+index[0]+index[1]).css("color","red");
+	    $("#"+index[0]+index[1]).css("background-color","#ededed");
 	    $('#'+index[0]+index[1]).css("opacity","0.4");
 	    $('#'+index[0]+index[1]).attr("disabled","disabled");
+	    openedMatrix[index[0]][index[1]]=1;
     }
-    else
+    else{
+    debugger;
      $('#'+index[0]+index[1]).css("background-color","red");
+     endGame(false,timerFunc);
+    }
+    var count = 0;
+    for(var i =0;i<openedMatrix.length;i++)
+     for(var j =0;j<openedMatrix[i].length;j++)
+     	if(openedMatrix[i][j]==0)
+     		count++;
+
+     if(count==mineArray.length)
+     	endGame(true,timerFunc);
+ }
 	   
     
     
-}
+
 
 
 function revealAdjacent(x,y,isVisited)
@@ -155,6 +200,7 @@ function revealAdjacent(x,y,isVisited)
 	{
     $('#'+x+y).attr("disabled","disabled");
 	$('#'+x+y).css("opacity","0.4");
+	 openedMatrix[x][y]=1;
      }
 
 	isVisited.push(checkArr);
@@ -195,7 +241,9 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 		//$('#'+adjacentRow+adjacentCol).css("font-size","inherit");
 		//$('#'+adjacentRow+adjacentCol).focus();
 	    $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
+	    $("#"+adjacentRow+adjacentCol).css("background-color","#ededed");
 	    $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
+	     openedMatrix[adjacentRow][adjacentCol]=1;
 		revealAdjacent(adjacentRow,adjacentCol,isVisited);
 	}
 	else
@@ -206,8 +254,9 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 	    $('#'+adjacentRow+adjacentCol).css("color","blue");
 		if(board[adjacentRow][adjacentCol]>2)
 	    $('#'+adjacentRow+adjacentCol).css("color","red");
-
-	  $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
+         openedMatrix[adjacentRow][adjacentCol]=1;
+       $("#"+adjacentRow+adjacentCol).css("background-color","#ededed");
+	   $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
 	   $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
 	 	//$('#'+adjacentRow+adjacentCol).focus();
 
@@ -226,26 +275,93 @@ function startGame()
 {
 	$("#content").show();
 	startTimer(10);
+	$("#startButton").toggle();
+
 }
 
 function startTimer(maxMinutes)
 {
   //ten minutes interval initially
-  var intervalInMinutes = 60 * maxMinutes;
-  var timer = intervalInMinutes,minutes,seconds;
- setInterval(function(){
-  minutes = parseInt(timer / 60, 10);
-  seconds = parseInt(timer % 60, 10);
+  //var intervalInMinutes = 60 * maxMinutes;
+  clearInterval(timerFunc);
+  var minutes,seconds;
+  minutes = 0,seconds =0;
+
+ timerFunc = setInterval(function(){
+ 	if(seconds/60==1)
+ 	minutes = parseInt(minutes)+1;
+ 	
+  minutes = parseInt(minutes);
   minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = parseInt(seconds % 60, 10);
+
   seconds = seconds < 10 ? "0" + seconds : seconds;
   $("#timer").html(minutes+":"+seconds);
-   if (--timer < 0) {
-            timer = intervalInMinutes;
+  seconds++;
+   if (seconds == 300) {
+           // timer = intervalInMinutes;
+            endGame(false,timerFunc);
         }
    }, 1000);
-
+ 
+ 
 }
 
 
+
+
+function endGame(isWin,timerFunc)
+{
+	debugger;
+	clearInterval(timerFunc);
+	var time = $("#timer").text();
+	var strTime  = time.split(":");
+	var minutes = strTime[0]
+	var seconds = strTime[1]
+	
+
+	if(minutes==9&&seconds==60)
+	{
+		minutes = 10;
+		seconds = 0;
+	}
+
+
+
+ if(!isWin)
+
+ {
+ window.alert("You lost,and you took "+minutes+" minutes and "+seconds+" seconds to play. What a loser.");
+ for(var i =0;i<board.length;i++)
+ 	for(var j=0;j<board[i].length;j++)
+ 	{
+ 		$('#'+i+j).attr("disabled","disabled");
+ 		$('#'+i+j).css("opacity","0.4");
+ 		if(board[i][j]==1)
+	    $('#'+i+j).css("color","black");
+		if(board[i][j]==2)
+	    $('#'+i+j).css("color","blue");
+		if(board[i][j]>2)
+	    $('#'+i+j).css("color","red");
+ 	}
+
+ for(var i=0;i<mineArray.length;i++)
+ 	    $('#'+mineArray[i][0]+mineArray[i][1]).css("background-color","red");
+ }
+if(isWin)
+{
+	 for(var i =0;i<board.length;i++)
+ 	for(var j=0;j<board[i].length;j++)
+ 	$('#'+i+j).attr("disabled","disabled");
+window.alert("You won. Your time: "+time+" Feeling lucky? Punk?");
+}
+$("#startButton").unbind();
+$("#startButton").html("Play again?");
+$("#startButton").click(initialiseGame);
+$("#startButton").toggle();
+
+timerFunc = undefined;
+//initialiseGame();
+}
 
 

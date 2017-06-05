@@ -17,14 +17,7 @@
 	  border:0;
 	}
 
-	button:focus {
-	  background: #e0e0e0;
-	  outline: none;
-	  -webkit-box-shadow: inset 0px 0px 4px #ccc;
-	     -moz-box-shadow: inset 0px 0px 4px #ccc;
-	          box-shadow: inset 0px 0px 4px #ccc;
-	}
-
+	
 	td{
 		margin:0;
 	}
