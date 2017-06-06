@@ -1,6 +1,10 @@
 $(document).ready(function(){
 
- 
+ /*These  variables will be used for various key parts for the game,
+ eg: creating the board
+ 	 managing the timer
+ 	 managing mine location and opened cell status.
+ */
  var timerFunc;
  var  board;
  var mineArray;
@@ -12,6 +16,10 @@ $(document).ready(function(){
 	
 });
 
+/*Helper function which initialises game ,
+  draws and renders the board. 
+  and makes the game play-ready
+  */
 function initialiseGame()
 {
 $("#startButton").empty();
@@ -26,7 +34,8 @@ $("#content").hide();
 
 }
 
-
+/*The board is randomly generated and made 
+   with this function */
 function makeBoard(rows,cols,mines)
 {
 var i,j;
@@ -118,7 +127,8 @@ allPositions.forEach(function(position){
 
 }
 
-
+/* Helper function to render the board
+   using tables and button elements.*/
 function renderBoard(board)
 {
  
@@ -133,7 +143,6 @@ function renderBoard(board)
  $('#'+buttonId).click(buttonClicked);
  var button = document.getElementById(buttonId);
  button.addEventListener('contextmenu',function(ev){
- 	debugger;
  	ev.preventDefault();
  	var buttonId = this.id;
  	 var color = $("#"+buttonId).css("background-color");
@@ -160,22 +169,27 @@ function buttonClicked()
 	else
 	if(board[index[0]][index[1]]>0)
 	{
+		//Reveal individual elements on basis of the value stored in them.
         if(board[index[0]][index[1]]==1)
 	    $('#'+index[0]+index[1]).css("color","black");
 		if(board[index[0]][index[1]]==2)
 	    $('#'+index[0]+index[1]).css("color","blue");
 		if(board[index[0]][index[1]]>2)
 	    $('#'+index[0]+index[1]).css("color","red");
+
 	    $("#"+index[0]+index[1]).css("background-color","#ededed");
 	    $('#'+index[0]+index[1]).css("opacity","0.4");
 	    $('#'+index[0]+index[1]).attr("disabled","disabled");
 	    openedMatrix[index[0]][index[1]]=1;
     }
     else{
-    debugger;
      $('#'+index[0]+index[1]).css("background-color","red");
      endGame(false,timerFunc);
     }
+
+    /*Count the number of unopened cells on each button click to check for win condition
+    numOfUnopenedCells = numOfMines
+    */
     var count = 0;
     for(var i =0;i<openedMatrix.length;i++)
      for(var j =0;j<openedMatrix[i].length;j++)
@@ -189,7 +203,9 @@ function buttonClicked()
     
     
 
-
+/* Recursive helper function to reveal 
+   mines when an element with no adjacent mines is visited
+   */
 
 function revealAdjacent(x,y,isVisited)
 {
@@ -238,8 +254,6 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 
 	if(board[adjacentRow][adjacentCol]==0)
 	{
-		//$('#'+adjacentRow+adjacentCol).css("font-size","inherit");
-		//$('#'+adjacentRow+adjacentCol).focus();
 	    $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
 	    $("#"+adjacentRow+adjacentCol).css("background-color","#ededed");
 	    $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
@@ -258,7 +272,6 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
        $("#"+adjacentRow+adjacentCol).css("background-color","#ededed");
 	   $('#'+adjacentRow+adjacentCol).css("opacity","0.4");
 	   $('#'+adjacentRow+adjacentCol).attr("disabled","disabled");
-	 	//$('#'+adjacentRow+adjacentCol).focus();
 
     }
 	
@@ -270,22 +283,24 @@ if(adjacentRow>=0&&adjacentRow<board.length&&adjacentCol>=0&&adjacentCol<board[0
 }
 }
 
-
+//Helper function to start game
 function startGame()
 {
-	$("#content").show();
+	
 	startTimer(10);
 	$("#startButton").toggle();
+	$("#content").show();
 
 }
 
+//Timer function used for timing the game.
 function startTimer(maxMinutes)
 {
-  //ten minutes interval initially
-  //var intervalInMinutes = 60 * maxMinutes;
+
   clearInterval(timerFunc);
   var minutes,seconds;
   minutes = 0,seconds =0;
+      $("#timer").html(minutes+"0:0"+seconds);
 
  timerFunc = setInterval(function(){
  	if(seconds/60==1)
@@ -309,10 +324,9 @@ function startTimer(maxMinutes)
 
 
 
-
+//Game end conditions and screens.
 function endGame(isWin,timerFunc)
 {
-	debugger;
 	clearInterval(timerFunc);
 	var time = $("#timer").text();
 	var strTime  = time.split(":");
@@ -331,7 +345,8 @@ function endGame(isWin,timerFunc)
  if(!isWin)
 
  {
- window.alert("You lost,and you took "+minutes+" minutes and "+seconds+" seconds to play. What a loser.");
+ window.alert("You lost,and you took "+minutes+" minutes and "+seconds+" seconds to play.Did that sting?");
+
  for(var i =0;i<board.length;i++)
  	for(var j=0;j<board[i].length;j++)
  	{
@@ -346,7 +361,7 @@ function endGame(isWin,timerFunc)
  	}
 
  for(var i=0;i<mineArray.length;i++)
- 	    $('#'+mineArray[i][0]+mineArray[i][1]).css("background-color","red");
+  $('#'+mineArray[i][0]+mineArray[i][1]).css("background-color","red");
  }
 if(isWin)
 {
@@ -359,9 +374,8 @@ $("#startButton").unbind();
 $("#startButton").html("Play again?");
 $("#startButton").click(initialiseGame);
 $("#startButton").toggle();
-
+ 
 timerFunc = undefined;
-//initialiseGame();
 }
 
 

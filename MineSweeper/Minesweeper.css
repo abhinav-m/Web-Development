@@ -58,7 +58,7 @@
 
 	#startButton{
 		color:white;
-		background-color:#006600;
+		background-color:black;
 		width:200px;
 		height:50px;
 		border-radius:5px;
@@ -72,3 +72,8 @@
 	#timer{
 		margin:10px;
 	}
+
+	#startButton:hover{
+  background-color:blue;
+  color:white;
+}
